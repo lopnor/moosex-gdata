@@ -1,6 +1,6 @@
 package Test::GData::DocumentsList;
 use MooseX::Singleton;
-with 'MooseX::Role::GData';
+with 'MooseX::GData';
 use Test::GData::DocumentsList::Feed;
 
 our $VERSION = '0.01';
@@ -14,37 +14,15 @@ around feed => sub {
         baseurl,
         $args,
     );
-    return Test::GData::DocumentsList::Feed->new(
-        {
-            entries => $feed
-        }
-    );
+    return Test::GData::DocumentsList::Feed->new({feed => $feed});
 };
 
 around post => sub {
     my ($next, $self, $entry) = @_;
-    my $ret = $self->$next(
+    return $next->($self,
         baseurl,
-        $entry->entry,
+        $entry
     );
-    return Test::GData::DocumentsList::Entry->new({entry => $ret});
-};
-
-around put => sub {
-    my ($next, $self, $args) = @_;
-    $self->$next(
-        {
-            uri => join('/', baseurl, $args->id),
-        }
-    );
-};
-
-around delete => sub {
-    my ($next, $self, $entry) = @_;
-    my $ret = $self->$next(
-        join('/', baseurl, $entry->id),
-    );
-    return $ret->is_success;
 };
 
 1;

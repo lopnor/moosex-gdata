@@ -1,6 +1,6 @@
 use inc::Module::Install;
-name 'MooseX-Role-GData';
-all_from 'lib/MooseX/Role/GData.pm';
+name 'MooseX-GData';
+all_from 'lib/MooseX/GData.pm';
 
 # requires '';
 

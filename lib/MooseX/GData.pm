@@ -1,4 +1,4 @@
-package MooseX::Role::GData;
+package MooseX::GData;
 use Moose::Role;
 
 use Carp;
@@ -111,48 +111,49 @@ sub entry {
 }
 
 sub post {
-    my ($self, $url, $entry, $header) = @_;
+    my ($self, $uri, $entry) = @_;
     my $res = $self->request(
         {
-            uri => $url,
-            content => $entry->as_xml,
-            header => $header || undef,
+            uri => $uri,
+            content => $entry->entry->as_xml,
             content_type => 'application/atom+xml',
         }
     );
-    return (ref $entry)->new(\($res->content));
+    my $res_entry = XML::Atom::Entry->new(\($res->content));
+    $entry->entry($res_entry);
+    return $entry;
 }
 
 sub put {
-    my ($self, $args) = @_;
-    my $uri = $args->{uri} 
-        or die 'uri not specified';
-    my $entry = $args->{entry};
-    ref $entry eq 'XML::Atom::Entry' 
-        or die 'specify XML::Atom::Entry to put';
+    my ($self, $entry) = @_;
     my $res = $self->request(
         {
-            uri => $uri,
+            uri => $entry->id,
             method => 'PUT',
-            content => $args->{entry}->as_xml,
+            content => $entry->entry->as_xml,
             content_type => 'application/atom+xml',
-            %$args,
-        }
-    );
-    return XML::Atom::Entry->new(\($res->content));
-}
-
-sub delete {
-    my ($self, $uri) = @_;
-    my $res = $self->request(
-        {
-            uri => $uri,
-            method => 'DELETE',
             header => {
-                'If-Match' => '*',
+                'If-Match' => $entry->etag,
             }
         }
     );
+    my $res_entry = XML::Atom::Entry->new(\($res->content));
+    $entry->entry($res_entry);
+    return $entry;
+}
+
+sub delete {
+    my ($self, $entry) = @_;
+    my $res = $self->request(
+        {
+            uri => $entry->id,
+            method => 'DELETE',
+            header => {
+                'If-Match' => $entry->etag,
+            }
+        }
+    );
+    return $res->is_success;
 }
 
 1;
