@@ -30,10 +30,7 @@ has entry => (
     lazy_build => 1,
     trigger => sub {
         my ($self,$entry) = @_;
-        $self->{etag} = $entry->get_attr('gd:etag');
-        $self->{id} = $entry->id;
-        $self->{title} = $entry->title;
-        $self->dirty(0);
+        $self->_update_entry($entry);
     },
 );
 
@@ -62,6 +59,14 @@ around entry => sub {
     }
     $next->($self, $arg);
 };
+
+sub _update_entry {
+    my ($self, $entry) = @_;
+    $self->{etag} = $entry->get_attr('gd:etag');
+    $self->{id} = $entry->id;
+    $self->{title} = $entry->title;
+    $self->dirty(0);
+}
 
 sub _build_entry {
     my $self = shift;
