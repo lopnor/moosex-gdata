@@ -21,7 +21,7 @@ BEGIN {
     use_ok( 'Test::GData::DocumentsList::Entry' );
 }
 
-ok my $service = Test::GData::DocumentsList->initialize(
+ok my $service = Test::GData::DocumentsList->new(
     username => $config->{username},
     password => $config->{password},
 );

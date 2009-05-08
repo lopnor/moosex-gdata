@@ -1,5 +1,5 @@
 package MooseX::GData::Entry;
-use Moose::Role;
+use Any::Moose '::Role';
 
 use MooseX::GData;
 use XML::Atom;
@@ -24,13 +24,13 @@ has etag => (
     isa => 'Str',
 );
 
-has entry => (
+has atom => (
     is => 'rw',
     isa => 'XML::Atom::Entry',
     lazy_build => 1,
     trigger => sub {
-        my ($self,$entry) = @_;
-        $self->_update_entry($entry);
+        my ($self,$atom) = @_;
+        $self->_update_atom($atom);
     },
 );
 
@@ -51,24 +51,24 @@ sub _build_title {
     return $self->entry->title;
 }
 
-around entry => sub {
+around atom => sub {
     my ($next, $self, $arg) = @_;
     unless ($arg) {
-        $self->{entry} = $self->_build_entry if $self->dirty;
+        $self->{atom} = $self->_build_atom if $self->dirty;
         return $next->($self);
     }
     $next->($self, $arg);
 };
 
-sub _update_entry {
-    my ($self, $entry) = @_;
-    $self->{etag} = $entry->get_attr('gd:etag');
-    $self->{id} = $entry->id;
-    $self->{title} = $entry->title;
+sub _update_atom {
+    my ($self, $atom) = @_;
+    $self->{etag} = $atom->get_attr('gd:etag');
+    $self->{id} = $atom->id;
+    $self->{title} = $atom->title;
     $self->dirty(0);
 }
 
-sub _build_entry {
+sub _build_atom {
     my $self = shift;
     my $atom = XML::Atom::Entry->new(Version => 1);
     $atom->title($self->title) if $self->{title};

@@ -1,5 +1,5 @@
 package MooseX::GData;
-use Moose::Role;
+use Any::Moose '::Role';
 
 use Carp;
 use LWP::UserAgent;

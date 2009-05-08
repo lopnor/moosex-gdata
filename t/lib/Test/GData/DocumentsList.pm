@@ -1,5 +1,5 @@
 package Test::GData::DocumentsList;
-use MooseX::Singleton;
+use Any::Moose;
 with 'MooseX::GData';
 use Test::GData::DocumentsList::Feed;
 

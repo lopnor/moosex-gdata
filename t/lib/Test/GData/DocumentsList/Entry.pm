@@ -1,6 +1,6 @@
 package Test::GData::DocumentsList::Entry;
-use Moose;
-use Moose::Util::TypeConstraints;
+use Any::Moose;
+use Any::Moose '::Util::TypeConstraints';
 
 with 'MooseX::GData::Entry';
 use XML::Atom::Category;
@@ -20,7 +20,7 @@ sub _build_kind {
     return $self->_kind_from_entry($self->entry);
 }
 
-around _build_entry => sub {
+around _build_atom => sub {
     my ($next, $self) = @_;
     my $atom = $next->($self);
     my $cat = XML::Atom::Category->new(Version => 1);

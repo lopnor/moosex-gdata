@@ -1,5 +1,5 @@
 package Test::GData::DocumentsList::Feed;
-use Moose;
+use Any::Moose;
 
 with 'MooseX::GData::Feed';
 

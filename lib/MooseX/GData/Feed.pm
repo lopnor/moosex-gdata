@@ -1,6 +1,6 @@
 package MooseX::GData::Feed;
-use Moose::Role;
-use Moose::Util::TypeConstraints;
+use Any::Moose '::Role';
+use Any::Moose '::Util::TypeConstraints';
 
 requires 'entry_class';
 
@@ -21,7 +21,7 @@ has entries => (
 sub _build_entries {
     my $self = shift;
     my $class = $self->entry_class;
-    Class::MOP::load_class($class);
+    Any::Moose::load_class($class);
     return [
         map { $class->new({entry => $_}) } $self->feed->entries
     ];

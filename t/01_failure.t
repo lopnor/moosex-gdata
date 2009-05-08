@@ -10,7 +10,7 @@ BEGIN {
 }
 
 throws_ok {
-    my $dlist = Test::GData::DocumentsList->initialize(
+    my $dlist = Test::GData::DocumentsList->new(
         username => 'foo',
         password => 'bar',
     );
