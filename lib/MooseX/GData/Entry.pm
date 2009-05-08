@@ -43,12 +43,12 @@ my $ns = XML::Atom::Namespace->new('gd', 'http://schemas.google.com/g/2005');
 
 sub _build_id {
     my $self = shift;
-    return $self->entry->id;
+    return $self->atom->id;
 }
 
 sub _build_title {
     my $self = shift;
-    return $self->entry->title;
+    return $self->atom->title;
 }
 
 around atom => sub {

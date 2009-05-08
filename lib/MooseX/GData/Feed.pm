@@ -23,7 +23,7 @@ sub _build_entries {
     my $class = $self->entry_class;
     Any::Moose::load_class($class);
     return [
-        map { $class->new({entry => $_}) } $self->feed->entries
+        map { $class->new({atom => $_}) } $self->feed->entries
     ];
 }
 

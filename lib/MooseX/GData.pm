@@ -115,12 +115,12 @@ sub post {
     my $res = $self->request(
         {
             uri => $uri,
-            content => $entry->entry->as_xml,
+            content => $entry->atom->as_xml,
             content_type => 'application/atom+xml',
         }
     );
-    my $res_entry = XML::Atom::Entry->new(\($res->content));
-    $entry->entry($res_entry);
+    my $atom = XML::Atom::Entry->new(\($res->content));
+    $entry->atom($atom);
     return $entry;
 }
 
@@ -130,15 +130,15 @@ sub put {
         {
             uri => $entry->id,
             method => 'PUT',
-            content => $entry->entry->as_xml,
+            content => $entry->atom->as_xml,
             content_type => 'application/atom+xml',
             header => {
                 'If-Match' => $entry->etag,
             }
         }
     );
-    my $res_entry = XML::Atom::Entry->new(\($res->content));
-    $entry->entry($res_entry);
+    my $atom = XML::Atom::Entry->new(\($res->content));
+    $entry->atom($atom);
     return $entry;
 }
 
